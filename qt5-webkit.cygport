@@ -1,0 +1,57 @@
+inherit qt5-qmake
+
+NAME="qt5-webkit"
+VERSION=5.1.0
+RELEASE=1
+CATEGORY="Libs"
+SUMMARY="Qt C++ application framework (WebKit library)"
+DESCRIPTION="Qt is a cross-platform application framework for desktop and
+embedded development. Qt enables programmers to create advanced GUI
+applications once and deploy them to Windows, Mac OS X and Linux without
+rewriting the source code. Companies using Qt can leverage software
+investments made on one platform across many others."
+HOMEPAGE="http://qt-project.org/"
+SRC_URI="http://download.qt-project.org/official_releases/qt/${VERSION%.*}/${VERSION}/submodules/qtwebkit-opensource-src-${VERSION}.tar.xz"
+SRC_DIR="qtwebkit-opensource-src-${VERSION}"
+PATCH_URI="5.1.0-os-cygwin.patch"
+
+PKG_NAMES="libQt5WebKit5 libQt5WebKit-devel ${NAME}-doc"
+libQt5WebKit5_CONTENTS="
+	usr/bin/cygQt5WebKit-5.dll
+	usr/bin/cygQt5WebKitWidgets-5.dll
+	usr/lib/qt5/libexec/QtWebPluginProcess.exe
+	usr/lib/qt5/libexec/QtWebProcess.exe
+	usr/lib/qt5/qml/QtWebKit/
+	usr/share/doc/qt5-webkit/ChangeLog
+"
+libQt5WebKit_devel_CONTENTS="
+	usr/include/qt5/QtWebKit/
+	usr/include/qt5/QtWebKitWidgets/
+	usr/lib/cmake/Qt5WebKit/
+	usr/lib/cmake/Qt5WebKitWidgets/
+	usr/lib/libQt5WebKit.*
+	usr/lib/libQt5WebKitWidgets.*
+	usr/lib/pkgconfig/Qt5WebKit.pc
+	usr/lib/pkgconfig/Qt5WebKitWidgets.pc
+	usr/lib/qt5/mkspecs/modules/qt_lib_webkit.pri
+	usr/lib/qt5/mkspecs/modules/qt_lib_webkitwidgets.pri
+"
+qt5_webkit_doc_CATEGORY="Doc"
+qt5_webkit_doc_CONTENTS="usr/share/qt5/doc/qtwebkit*"
+
+# WebKit debuginfo is too large (objcopy bails due to insufficient memory)
+CFLAGS+=" -g1"
+CXXFLAGS+=" -g1"
+RESTRICT="debuginfo"
+
+src_compile() {
+	cd ${B}
+	cygqmake5 ${S}
+	cygmake
+	cygmake docs
+}
+
+src_install() {
+	cd ${B}
+	qt5_qmake_install install_docs
+}
