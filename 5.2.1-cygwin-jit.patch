@@ -1,0 +1,116 @@
+--- origsrc/qtwebkit-opensource-src-5.2.1/Source/JavaScriptCore/jit/JITStubs.cpp	2014-02-01 14:37:54.000000000 -0600
++++ src/qtwebkit-opensource-src-5.2.1/Source/JavaScriptCore/jit/JITStubs.cpp	2014-07-13 15:12:32.622457500 -0500
+@@ -382,7 +382,7 @@ SYMBOL_STRING(ctiOpThrowNotCaught) ":" "
+ 
+ #else // USE(JSVALUE32_64)
+ 
+-#if COMPILER(GCC) && CPU(X86_64) && !OS(WINDOWS)
++#if COMPILER(GCC) && CPU(X86_64) && !OS(WINDOWS) && !OS(CYGWIN)
+ 
+ // These ASSERTs remind you that, if you change the layout of JITStackFrame, you
+ // need to change the assembly trampolines below to match.
+@@ -451,7 +451,7 @@ SYMBOL_STRING(ctiOpThrowNotCaught) ":" "
+     "ret" "\n"
+ );
+ 
+-#elif COMPILER(GCC) && CPU(X86_64) && OS(WINDOWS)
++#elif COMPILER(GCC) && CPU(X86_64) && (OS(WINDOWS) || OS(CYGWIN))
+ 
+ // These ASSERTs remind you that, if you change the layout of JITStackFrame, you
+ // need to change the assembly trampolines below to match.
+--- origsrc/qtwebkit-opensource-src-5.2.1/Source/JavaScriptCore/jit/JITStubs.h	2014-02-01 14:37:54.000000000 -0600
++++ src/qtwebkit-opensource-src-5.2.1/Source/JavaScriptCore/jit/JITStubs.h	2014-07-13 15:13:32.007784700 -0500
+@@ -87,7 +87,7 @@ union JITStubArg {
+     ArrayAllocationProfile* arrayAllocationProfile() { return static_cast<ArrayAllocationProfile*>(asPointer); }
+ };
+     
+-#if !OS(WINDOWS) && CPU(X86_64)
++#if !OS(WINDOWS) && !OS(CYGWIN) && CPU(X86_64)
+ struct JITStackFrame {
+     void* reserved; // Unused
+     JITStubArg args[6];
+@@ -111,7 +111,7 @@ struct JITStackFrame {
+     // When JIT code makes a call, it pushes its return address just below the rest of the stack.
+     ReturnAddressPtr* returnAddressSlot() { return reinterpret_cast<ReturnAddressPtr*>(this) - 1; }
+ };
+-#elif OS(WINDOWS) && CPU(X86_64)
++#elif (OS(WINDOWS) || OS(CYGWIN)) && CPU(X86_64)
+ struct JITStackFrame {
+     void* shadow[4]; // Shadow space reserved for a callee's parameters home addresses
+     void* reserved; // Unused, also maintains the 16-bytes stack alignment
+@@ -140,10 +140,10 @@ struct JITStackFrame {
+     ReturnAddressPtr* returnAddressSlot() { return reinterpret_cast<ReturnAddressPtr*>(this) - 1; }
+ };
+ #elif CPU(X86)
+-#if COMPILER(MSVC) || (OS(WINDOWS) && COMPILER(GCC))
++#if COMPILER(MSVC) || (OS(WINDOWS) && COMPILER(GCC)) || OS(CYGWIN)
+ #pragma pack(push)
+ #pragma pack(4)
+-#endif // COMPILER(MSVC) || (OS(WINDOWS) && COMPILER(GCC))
++#endif // COMPILER(MSVC) || (OS(WINDOWS) && COMPILER(GCC)) || OS(CYGWIN)
+ struct JITStackFrame {
+     void* reserved; // Unused
+     JITStubArg args[6];
+@@ -167,9 +167,9 @@ struct JITStackFrame {
+     // When JIT code makes a call, it pushes its return address just below the rest of the stack.
+     ReturnAddressPtr* returnAddressSlot() { return reinterpret_cast<ReturnAddressPtr*>(this) - 1; }
+ };
+-#if COMPILER(MSVC) || (OS(WINDOWS) && COMPILER(GCC))
++#if COMPILER(MSVC) || (OS(WINDOWS) && COMPILER(GCC)) || OS(CYGWIN)
+ #pragma pack(pop)
+-#endif // COMPILER(MSVC) || (OS(WINDOWS) && COMPILER(GCC))
++#endif // COMPILER(MSVC) || (OS(WINDOWS) && COMPILER(GCC)) || OS(CYGWIN)
+ #elif CPU(ARM_THUMB2)
+ struct JITStackFrame {
+     JITStubArg reserved; // Unused
+--- origsrc/qtwebkit-opensource-src-5.2.1/Source/JavaScriptCore/jit/JSInterfaceJIT.h	2014-02-01 14:37:54.000000000 -0600
++++ src/qtwebkit-opensource-src-5.2.1/Source/JavaScriptCore/jit/JSInterfaceJIT.h	2014-07-13 15:13:54.981461800 -0500
+@@ -56,7 +56,7 @@ namespace JSC {
+ #if CPU(X86_64)
+         static const RegisterID returnValueRegister = X86Registers::eax;
+         static const RegisterID cachedResultRegister = X86Registers::eax;
+-#if !OS(WINDOWS)
++#if !OS(WINDOWS) && !OS(CYGWIN)
+         static const RegisterID firstArgumentRegister = X86Registers::edi;
+ #else
+         static const RegisterID firstArgumentRegister = X86Registers::ecx;
+--- origsrc/qtwebkit-opensource-src-5.2.1/Source/JavaScriptCore/jit/ThunkGenerators.cpp	2014-02-01 14:37:54.000000000 -0600
++++ src/qtwebkit-opensource-src-5.2.1/Source/JavaScriptCore/jit/ThunkGenerators.cpp	2014-07-13 15:14:29.222746600 -0500
+@@ -264,7 +264,7 @@ static MacroAssemblerCodeRef nativeForGe
+     jit.peek(JSInterfaceJIT::regT1);
+     jit.emitPutToCallFrameHeader(JSInterfaceJIT::regT1, JSStack::ReturnPC);
+ 
+-#if !OS(WINDOWS)
++#if !OS(WINDOWS) && !OS(CYGWIN)
+     // Calling convention:      f(edi, esi, edx, ecx, ...);
+     // Host function signature: f(ExecState*);
+     jit.move(JSInterfaceJIT::callFrameRegister, X86Registers::edi);
+--- origsrc/qtwebkit-opensource-src-5.2.1/Source/JavaScriptCore/yarr/YarrJIT.cpp	2014-02-01 14:37:54.000000000 -0600
++++ src/qtwebkit-opensource-src-5.2.1/Source/JavaScriptCore/yarr/YarrJIT.cpp	2014-07-13 15:15:04.090956200 -0500
+@@ -87,7 +87,7 @@ class YarrGenerator : private MacroAssem
+     static const RegisterID returnRegister = X86Registers::eax;
+     static const RegisterID returnRegister2 = X86Registers::edx;
+ #elif CPU(X86_64)
+-#if !OS(WINDOWS)
++#if !OS(WINDOWS) && !OS(CYGWIN)
+     static const RegisterID input = X86Registers::edi;
+     static const RegisterID index = X86Registers::esi;
+     static const RegisterID length = X86Registers::edx;
+@@ -2527,7 +2527,7 @@ class YarrGenerator : private MacroAssem
+         // The ABI doesn't guarantee the upper bits are zero on unsigned arguments, so clear them ourselves.
+         zeroExtend32ToPtr(index, index);
+         zeroExtend32ToPtr(length, length);
+-#if OS(WINDOWS)
++#if OS(WINDOWS) || OS(CYGWIN)
+         if (compileMode == IncludeSubpatterns)
+             loadPtr(Address(X86Registers::ebp, 6 * sizeof(void*)), output);
+ #endif
+@@ -2569,7 +2569,7 @@ class YarrGenerator : private MacroAssem
+     void generateReturn()
+     {
+ #if CPU(X86_64)
+-#if OS(WINDOWS)
++#if OS(WINDOWS) || OS(CYGWIN)
+         // Store the return value in the allocated space pointed by rcx.
+         store64(returnRegister, Address(X86Registers::ecx));
+         store64(returnRegister2, Address(X86Registers::ecx, sizeof(void*)));
