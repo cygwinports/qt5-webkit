@@ -1,8 +1,8 @@
 inherit qt5-qmake
 
 NAME="qt5-webkit"
-VERSION=5.2.1
-RELEASE=1
+VERSION=5.3.2
+RELEASE=2
 CATEGORY="Libs"
 SUMMARY="Qt C++ application framework (WebKit library)"
 DESCRIPTION="Qt is a cross-platform application framework for desktop and
@@ -14,7 +14,9 @@ HOMEPAGE="http://qt-project.org/"
 SRC_URI="http://download.qt-project.org/official_releases/qt/${VERSION%.*}/${VERSION}/submodules/qtwebkit-opensource-src-${VERSION}.tar.xz"
 SRC_DIR="qtwebkit-opensource-src-${VERSION}"
 PATCH_URI="
+	http://pkgs.fedoraproject.org/cgit/webkitgtk3.git/plain/webkit-2.1.90-double2intsPPC32.patch?h=f20
 	http://pkgs.fedoraproject.org/cgit/webkitgtk3.git/plain/webkitgtk-2.2.7-ppc64_align.patch?h=f20
+	http://pkgs.fedoraproject.org/cgit/qt5-qtwebkit.git/tree/qtwebkit-opensource-src-5.4.1-private_browsing.patch
 	5.2.1-freetype25.patch
 	5.2.1-cygwin-angle.patch
 	5.2.1-cygwin-arc4random.patch
@@ -22,6 +24,7 @@ PATCH_URI="
 	5.2.1-cygwin-plugins.patch
 	5.2.1-cygwin-wchar.patch
 	5.2.1-cygwin-wtf.patch
+	5.3.2-export-symbols.patch
 "
 
 PKG_NAMES="libQt5WebKit5 libQt5WebKit-devel ${NAME}-doc"

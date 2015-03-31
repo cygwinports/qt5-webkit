@@ -51,7 +51,16 @@
      s_numberOfCores = sysconfResult < 0 ? defaultIfUnavailable : static_cast<int>(sysconfResult);
 --- origsrc/webkitgtk-2.2.7/Source/WTF/wtf/Platform.h	2014-04-30 02:08:23.000000000 -0500
 +++ src/webkitgtk-2.2.7/Source/WTF/wtf/Platform.h	2014-07-13 12:33:19.451296100 -0500
-@@ -335,6 +335,11 @@
+@@ -342,7 +342,7 @@
+ #endif
+ #endif
+ 
+-#if CPU(ARM) || CPU(MIPS) || CPU(SH4) || CPU(SPARC) || CPU(MIPS64)
++#if CPU(ARM) || CPU(MIPS) || CPU(SH4) || CPU(SPARC) || CPU(MIPS64) || OS(CYGWIN)
+ #define WTF_CPU_NEEDS_ALIGNED_ACCESS 1
+ #endif
+ 
+@@ -368,6 +368,11 @@
  #define WTF_OS_AIX 1
  #endif
  
