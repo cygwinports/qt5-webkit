@@ -80,15 +80,6 @@
      || OS(DARWIN)           \
      || OS(FREEBSD)          \
      || OS(HURD)             \
-@@ -876,7 +882,7 @@
- /* Pick which allocator to use; we only need an executable allocator if the assembler is compiled in.
-    On x86-64 we use a single fixed mmap, on other platforms we mmap on demand. */
- #if ENABLE(ASSEMBLER)
--#if CPU(X86_64) && !OS(WINDOWS) || PLATFORM(IOS)
-+#if CPU(X86_64) && !OS(WINDOWS) && !OS(CYGWIN) || PLATFORM(IOS)
- #define ENABLE_EXECUTABLE_ALLOCATOR_FIXED 1
- #else
- #define ENABLE_EXECUTABLE_ALLOCATOR_DEMAND 1
 --- origsrc/webkitgtk-2.2.7/Source/WTF/wtf/ThreadIdentifierDataPthreads.cpp	2013-08-03 11:10:38.000000000 -0500
 +++ src/webkitgtk-2.2.7/Source/WTF/wtf/ThreadIdentifierDataPthreads.cpp	2014-07-13 12:33:19.451296100 -0500
 @@ -45,7 +45,7 @@
