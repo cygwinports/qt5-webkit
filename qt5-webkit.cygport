@@ -1,8 +1,8 @@
 inherit qt5-qmake
 
 NAME="qt5-webkit"
-VERSION=5.4.1
-RELEASE=3
+VERSION=5.4.2
+RELEASE=1
 CATEGORY="Libs"
 SUMMARY="Qt C++ application framework (WebKit library)"
 DESCRIPTION="Qt is a cross-platform application framework for desktop and
@@ -15,7 +15,6 @@ SRC_URI="http://download.qt-project.org/official_releases/qt/${VERSION%.*}/${VER
 SRC_DIR="qtwebkit-opensource-src-${VERSION}"
 PATCH_URI="
 	http://pkgs.fedoraproject.org/cgit/webkitgtk3.git/plain/webkitgtk-2.2.7-ppc64_align.patch?h=f20
-	http://pkgs.fedoraproject.org/cgit/qt5-qtwebkit.git/plain/qtwebkit-opensource-src-5.4.1-private_browsing.patch
 	http://pkgs.fedoraproject.org/cgit/mingw-qt5-qtwebkit.git/plain/qt5-qtwebkit-workaround-build-breakage-after-svn-commit-136242.patch
 	5.2.1-freetype25.patch
 	5.2.1-cygwin-angle.patch
