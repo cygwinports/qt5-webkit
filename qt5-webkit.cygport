@@ -2,7 +2,7 @@ inherit qt5-qmake
 
 NAME="qt5-webkit"
 VERSION=5.5.1
-RELEASE=1
+RELEASE=2
 CATEGORY="Libs"
 SUMMARY="Qt C++ application framework (WebKit library)"
 DESCRIPTION="Qt is a cross-platform application framework for desktop and
@@ -24,6 +24,7 @@ PATCH_URI="
 	5.2.1-cygwin-wchar.patch
 	5.2.1-cygwin-wtf.patch
 	5.4.1-dllexport.patch
+	5.5.1-cygwin-ftm.patch
 "
 
 PKG_NAMES="libQt5WebKit5 libQt5WebKit-devel ${NAME}-doc"

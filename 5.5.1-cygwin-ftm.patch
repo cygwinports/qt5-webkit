@@ -1,0 +1,30 @@
+--- origsrc/qtwebkit-opensource-src-5.5.1/Source/JavaScriptCore/heap/MachineStackMarker.cpp	2015-10-12 23:37:11.000000000 -0500
++++ src/qtwebkit-opensource-src-5.5.1/Source/JavaScriptCore/heap/MachineStackMarker.cpp	2016-09-02 00:29:14.046462200 -0500
+@@ -19,6 +19,7 @@
+  *
+  */
+ 
++#define _GNU_SOURCE
+ #include "config.h"
+ #include "MachineStackMarker.h"
+ 
+--- origsrc/qtwebkit-opensource-src-5.5.1/Source/WTF/wtf/StackBounds.cpp	2015-10-12 23:37:08.000000000 -0500
++++ src/qtwebkit-opensource-src-5.5.1/Source/WTF/wtf/StackBounds.cpp	2016-09-02 00:23:26.359031700 -0500
+@@ -18,6 +18,7 @@
+  *
+  */
+ 
++#define _GNU_SOURCE
+ #include "config.h"
+ #include "StackBounds.h"
+ 
+--- origsrc/qtwebkit-opensource-src-5.5.1/Source/WebCore/xml/parser/XMLDocumentParserLibxml2.cpp	2015-10-12 23:37:20.000000000 -0500
++++ src/qtwebkit-opensource-src-5.5.1/Source/WebCore/xml/parser/XMLDocumentParserLibxml2.cpp	2016-09-02 10:46:00.744813800 -0500
+@@ -24,6 +24,7 @@
+  * Boston, MA 02110-1301, USA.
+  */
+ 
++#define _GNU_SOURCE	/* vasprintf */
+ #include "config.h"
+ #include "XMLDocumentParser.h"
+ 
