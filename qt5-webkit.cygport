@@ -2,7 +2,7 @@ inherit qt5-qmake
 
 NAME="qt5-webkit"
 VERSION=5.6.2
-RELEASE=1
+RELEASE=2
 CATEGORY="Libs"
 SUMMARY="Qt C++ application framework (WebKit library)"
 DESCRIPTION="Qt is a cross-platform application framework for desktop and
