@@ -1,8 +1,8 @@
 inherit qt5-qmake
 
 NAME="qt5-webkit"
-VERSION=5.6.2
-RELEASE=2
+VERSION=5.9.2
+RELEASE=1
 CATEGORY="Libs"
 SUMMARY="Qt C++ application framework (WebKit library)"
 DESCRIPTION="Qt is a cross-platform application framework for desktop and
@@ -11,8 +11,9 @@ applications once and deploy them to Windows, Mac OS X and Linux without
 rewriting the source code. Companies using Qt can leverage software
 investments made on one platform across many others."
 HOMEPAGE="https://www.qt.io/"
-SRC_URI="http://download.qt.io/snapshots/qt/${VERSION%.*}/${VERSION}/latest_src/submodules/qtwebkit-opensource-src-${VERSION}.tar.xz"
-SRC_DIR="qtwebkit-opensource-src-${VERSION}"
+commit=97c4a80a1282c8c3eaa343011286b76fd4838c5f
+SRC_URI="https://github.com/qt/qtwebkit/archive/${commit}/qtwebkit-${commit}.tar.gz"
+SRC_DIR="qtwebkit-${commit}"
 PATCH_URI="
 	http://pkgs.fedoraproject.org/cgit/webkitgtk3.git/plain/webkitgtk-2.2.7-ppc64_align.patch?h=f20
 	http://pkgs.fedoraproject.org/cgit/mingw-qt5-qtwebkit.git/plain/qt5-qtwebkit-workaround-build-breakage-after-svn-commit-136242.patch
@@ -53,15 +54,18 @@ libQt5WebKit_devel_CONTENTS="
 qt5_webkit_doc_CATEGORY="Doc"
 qt5_webkit_doc_CONTENTS="usr/share/qt5/doc/qtwebkit*"
 
+CXXFLAGS+=" -Wno-c++0x-compat -Wno-expansion-to-defined"
 # WebKit debuginfo is too large (objcopy bails due to insufficient memory)
 if defined ARCH_i686
 then
-CFLAGS+=" -g0"
-CXXFLAGS+=" -g0"
-RESTRICT="debuginfo"
+CFLAGS+=" -g1"
+CXXFLAGS+=" -g1"
+#RESTRICT="debuginfo"
 fi
 
 src_compile() {
+	# this triggers syncqt, which is necessary with a git snapshot
+	mkdir -p ${S}/.git
 	cd ${B}
 	cygqmake5 ${S}
 	cygmake
