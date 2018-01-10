@@ -2,7 +2,7 @@ inherit qt5-qmake
 
 NAME="qt5-webkit"
 VERSION=5.9.3
-RELEASE=0.1.20171108git
+RELEASE=0.2.20180106git
 CATEGORY="Libs"
 SUMMARY="Qt C++ application framework (WebKit library)"
 DESCRIPTION="Qt is a cross-platform application framework for desktop and
@@ -11,7 +11,7 @@ applications once and deploy them to Windows, Mac OS X and Linux without
 rewriting the source code. Companies using Qt can leverage software
 investments made on one platform across many others."
 HOMEPAGE="https://www.qt.io/"
-commit=fdafce4d3a4670e315c161a9ec79ae6203742d1d
+commit=201c7117463e43e9cbd02ff33c6f491d81b2e6c7
 SRC_URI="https://github.com/qt/qtwebkit/archive/${commit}/qtwebkit-${commit}.tar.gz"
 SRC_DIR="qtwebkit-${commit}"
 PATCH_URI="
